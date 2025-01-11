@@ -3,22 +3,47 @@ local UserInputService = game:GetService("UserInputService")
 local LocalPlayer = game:GetService("Players").LocalPlayer
 local WindowVisible = true -- Track window visibility
 
--- Define the usernames for you and your girlfriend
 local masterUsername = "yashgamer2233"
-local mistressUsername = "Karina_siwa2"
+local mistressUsername = "Karina_Siwa2"
 
--- Define the GamePass ID (replace with your actual GamePass ID)
-local gamePassID = 1029112746 -- Replace with the actual GamePass ID
+local gamepassID = 1029112746 -- Replace with your GamePass ID
 
--- Predefined Positions Table with coordinates for Dock, Sweet Shop, Gift-Making Place, and Church
+-- Check if the user owns the GamePass
+local function hasGamepass(player)
+    return player:HasGamePass(gamepassID)
+end
+
+local function showMessage(title, content)
+    Fluent:Notify({
+        Title = title,
+        Content = content,
+        Duration = 5
+    })
+end
+
+-- Verification for master or mistress
+if LocalPlayer.Name == masterUsername then
+    showMessage("Master has arrived", "Welcome, Yash!")
+elseif LocalPlayer.Name == mistressUsername then
+    showMessage("Mistress has arrived", "Welcome, Jahnavi!")
+else
+    if hasGamepass(LocalPlayer) then
+        showMessage("GamePass Verified", "You have access to this script!")
+    else
+        showMessage("Access Denied", "You do not have the necessary GamePass.")
+        return
+    end
+end
+
+-- Continue with the rest of the script (positions, etc.)
 local Positions = {
-    ["Dock"] = Vector3.new(445.53, 40.24, 392.25), -- Coordinates for Dock
-    ["Sweet Shop"] = Vector3.new(732.36, 156.41, -934.99), -- Coordinates for Sweet Shop
-    ["Gift-Making Place"] = Vector3.new(919.32, 235.89, -1137.43), -- Coordinates for Gift-Making Place
-    ["Church"] = Vector3.new(998.83, 231.93, -941.85), -- Coordinates for Church
+    ["Dock"] = Vector3.new(445.53, 40.24, 392.25),
+    ["Sweet Shop"] = Vector3.new(732.36, 156.41, -934.99),
+    ["Gift-Making Place"] = Vector3.new(919.32, 235.89, -1137.43),
+    ["Church"] = Vector3.new(998.83, 231.93, -941.85),
 }
 
-local PositionButtons = {} -- Store buttons for dynamically added positions
+local PositionButtons = {}
 
 local function SavePositionsToFile()
     writefile("ManjiroScriptHub_Positions.txt", game:GetService("HttpService"):JSONEncode(Positions))
@@ -33,7 +58,6 @@ local function LoadPositionsFromFile()
     end
 end
 
--- Load positions from file if available
 LoadPositionsFromFile()
 
 local Window = Fluent:CreateWindow({
@@ -49,7 +73,6 @@ local Tabs = {
     ManagePositions = Window:AddTab({ Title = "Manage Positions", Icon = "save" })
 }
 
--- Function to refresh position buttons
 local function RefreshPositionButtons(section)
     for _, button in ipairs(PositionButtons) do
         button:Destroy()
@@ -82,7 +105,6 @@ local function RefreshPositionButtons(section)
     end
 end
 
--- Manage Positions Tab
 do
     local ManageSection = Tabs.ManagePositions:AddSection("Position Management")
 
@@ -130,38 +152,11 @@ do
         end
     })
 
-    -- Load initial positions
     RefreshPositionButtons(ManageSection)
 end
 
--- Function to check if the player has purchased the GamePass
-local function CheckGamePass()
-    return LocalPlayer:HasGamePass(gamePassID)
-end
-
--- Custom message based on who loaded the script
-if LocalPlayer.Name == masterUsername then
-    Fluent:Notify({
-        Title = "Welcome, Master!",
-        Content = "The script has been loaded and is ready for use.",
-        Duration = 8
-    })
-elseif LocalPlayer.Name == mistressUsername then
-    Fluent:Notify({
-        Title = "Welcome, Mistress!",
-        Content = "The script has been loaded and is ready for use.",
-        Duration = 8
-    })
-elseif CheckGamePass() then
-    Fluent:Notify({
-        Title = "GamePass Verified!",
-        Content = "You have access to the script.",
-        Duration = 8
-    })
-else
-    Fluent:Notify({
-        Title = "GamePass Required",
-        Content = "You need to purchase the GamePass to use this script.",
-        Duration = 8
-    })
-end
+Fluent:Notify({
+    Title = "Manjiro Script Hub",
+    Content = "The script has been loaded and is ready to use!",
+    Duration = 8
+})
