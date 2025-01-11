@@ -1,29 +1,14 @@
-local gamePassID = 1029112746  -- Replace with your GamePass ID
-
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local UserInputService = game:GetService("UserInputService")
 local LocalPlayer = game:GetService("Players").LocalPlayer
 local WindowVisible = true -- Track window visibility
 
--- Check if the player owns the required game pass
-local function checkGamePass()
-    local hasGamePass = LocalPlayer:HasPass(gamePassID)
-    if not hasGamePass then
-        Fluent:Notify({
-            Title = "Access Denied",
-            Content = "You need to buy the GamePass to use this script.",
-            Duration = 5,
-            Image = "x"
-        })
-        return false
-    end
-    return true
-end
+-- Define the usernames for you and your girlfriend
+local masterUsername = "yashgamer2233"
+local mistressUsername = "Karina_siwa2"
 
--- If the user doesn't own the game pass, stop the script from loading further
-if not checkGamePass() then
-    return
-end
+-- Define the GamePass ID (replace with your actual GamePass ID)
+local gamePassID = 1029112746 -- Replace with the actual GamePass ID
 
 -- Predefined Positions Table with coordinates for Dock, Sweet Shop, Gift-Making Place, and Church
 local Positions = {
@@ -149,9 +134,34 @@ do
     RefreshPositionButtons(ManageSection)
 end
 
--- Notify user that the script has been loaded
-Fluent:Notify({
-    Title = "Manjiro Script Hub",
-    Content = "The script has been loaded and is ready to use!",
-    Duration = 8
-})
+-- Function to check if the player has purchased the GamePass
+local function CheckGamePass()
+    return LocalPlayer:HasGamePass(gamePassID)
+end
+
+-- Custom message based on who loaded the script
+if LocalPlayer.Name == masterUsername then
+    Fluent:Notify({
+        Title = "Welcome, Master!",
+        Content = "The script has been loaded and is ready for use.",
+        Duration = 8
+    })
+elseif LocalPlayer.Name == mistressUsername then
+    Fluent:Notify({
+        Title = "Welcome, Mistress!",
+        Content = "The script has been loaded and is ready for use.",
+        Duration = 8
+    })
+elseif CheckGamePass() then
+    Fluent:Notify({
+        Title = "GamePass Verified!",
+        Content = "You have access to the script.",
+        Duration = 8
+    })
+else
+    Fluent:Notify({
+        Title = "GamePass Required",
+        Content = "You need to purchase the GamePass to use this script.",
+        Duration = 8
+    })
+end
