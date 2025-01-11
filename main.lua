@@ -1,7 +1,29 @@
+local gamePassID = 1029112746  -- Replace with your GamePass ID
+
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local UserInputService = game:GetService("UserInputService")
 local LocalPlayer = game:GetService("Players").LocalPlayer
 local WindowVisible = true -- Track window visibility
+
+-- Check if the player owns the required game pass
+local function checkGamePass()
+    local hasGamePass = LocalPlayer:HasPass(gamePassID)
+    if not hasGamePass then
+        Fluent:Notify({
+            Title = "Access Denied",
+            Content = "You need to buy the GamePass to use this script.",
+            Duration = 5,
+            Image = "x"
+        })
+        return false
+    end
+    return true
+end
+
+-- If the user doesn't own the game pass, stop the script from loading further
+if not checkGamePass() then
+    return
+end
 
 -- Predefined Positions Table with coordinates for Dock, Sweet Shop, Gift-Making Place, and Church
 local Positions = {
